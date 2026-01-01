@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساحة الألعاب | أكاديمية النخبة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0a192f;
+            --gold: #c5a059;
+            --black: #050a14;
+            --white: #e6f1ff;
+            --gold-gradient: linear-gradient(45deg, #c5a059, #f7e0a1, #8e6d2d);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { background-color: var(--black); color: var(--white); overflow-x: hidden; }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+            padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .logo { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-decoration: none; }
+
+        /* --- إضافة كود القائمة الجانبية المفقود --- */
+        .side-nav {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+            background: linear-gradient(135deg, var(--navy), var(--black));
+            border-left: 2px solid var(--gold); z-index: 2000; padding: 40px 20px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.9);
+        }
+        .side-nav.active { right: 0; }
+        .side-nav ul { list-style: none; margin-top: 30px; }
+        .side-nav ul li a {
+            color: var(--white); text-decoration: none; padding: 12px;
+            display: flex; align-items: center; gap: 15px; border-radius: 10px; margin-bottom: 10px;
+        }
+        .side-nav ul li a:hover { background: var(--gold-gradient); color: var(--black); }
+        
+        .overlay-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; z-index: 1500; backdrop-filter: blur(5px);
+        }
+        .overlay-menu.active { display: block; }
+        /* ---------------------------------- */
+
+        .points-container {
+            display: flex;
+            align-items: center;
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 30px;
+            padding: 5px 15px;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .points-container:hover { background: rgba(197, 160, 89, 0.2); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background: var(--navy);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            width: 90%; max-width: 500px;
+            padding: 25px;
+            position: relative;
+            transform: scale(0.7); opacity: 0;
+            transition: 0.4s;
+        }
+
+        .modal-overlay.active { display: flex; }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(197,160,89,0.3);
+            margin-bottom: 20px; padding-bottom: 10px;
+        }
+
+        .close-btn { font-size: 1.5rem; cursor: pointer; color: var(--gold); }
+
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        .list-item:hover { background: rgba(255,255,255,0.05); }
+
+        .btn-action {
+            background: var(--gold-gradient); color: var(--black);
+            padding: 5px 15px; border-radius: 15px; font-weight: bold;
+            font-size: 0.8rem; border: none; cursor: pointer;
+        }
+
+        .profile-menu { position: relative; }
+        .profile-dropdown {
+            display: none; position: absolute; left: 0; top: 50px;
+            background: var(--navy); border: 1px solid var(--gold);
+            min-width: 200px; border-radius: 12px; z-index: 1100;
+        }
+        .profile-menu:hover .profile-dropdown { display: block; }
+        .profile-dropdown a {
+            display: block; padding: 12px; color: white; text-decoration: none;
+        }
+        .profile-dropdown a:hover { background: rgba(197,160,89,0.1); color: var(--gold); }
+
+        .hero { 
+            min-height: 45vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            background: linear-gradient(rgba(5, 10, 20, 0.85), rgba(5, 10, 20, 0.85)), 
+                        url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1500&q=80'); 
+            background-size: cover; 
+            background-position: center;
+            padding: 40px 10%;
+        }
+
+        .slogan-box {
+            max-width: 850px;
+            margin-top: 20px;
+            padding: 20px;
+            border-right: 4px solid var(--gold);
+            background: rgba(197, 160, 89, 0.03);
+            border-radius: 0 15px 15px 0;
+        }
+
+        .slogan-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: var(--white);
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .highlight-gold {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; padding: 50px 5%; }
+        .card { background: rgba(10, 25, 47, 0.5); border: 1px solid rgba(197, 160, 89, 0.2); padding: 40px 20px; border-radius: 20px; text-align: center; color: inherit; text-decoration: none; }
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<div class="overlay-menu" id="overlayMenu" onclick="toggleMenu()"></div>
+
+<header>
+    <a href="#" class="logo">أكاديمية النخبة</a>
+    
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div class="profile-menu">
+            <button class="profile-btn" style="background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 30px; cursor: pointer;">
+                <i class="fas fa-crown"></i> الحساب الملكي
+            </button>
+            <div class="profile-dropdown">
+                <a href="#" style="display: block; padding: 12px; color: white; text-decoration: none;"><i class="fas fa-user"></i> الملف الشخصي</a>
+                <a href="#" style="display: block; padding: 12px; color: white; text-decoration: none;"><i class="fas fa-gem"></i> درجات النخبة</a>
+                <hr style="border: 0.1px solid rgba(197,160,89,0.2)">
+                <a href="#" style="display: block; padding: 12px; color: #ff4d4d; text-decoration: none;"><i class="fas fa-power-off"></i> خروج</a>
+            </div>
+        </div>
+
+        <div class="menu-dots" onclick="toggleMenu()" style="font-size: 1.8rem; color: var(--gold); cursor: pointer;">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
+
+<nav class="side-nav" id="sideNav">
+    <div style="text-align: left; cursor: pointer; color: var(--gold);" onclick="toggleMenu()">
+        <i class="fas fa-times-circle fa-2x"></i>
+    </div>
+    <h2 style="color: var(--gold); text-align: center; margin: 20px 0;">القائمة الملكية</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+        <li><a href="videos.html"><i class="fas fa-play-circle"></i> الفيديوهات التعليمية</a></li>
+        <li><a href="articals.html"><i class="fas fa-feather-alt"></i> المقالات الحصرية</a></li>
+        <li><a href="library.html"><i class="fas fa-book-open"></i> مكتبة المراجع</a></li>
+        <li><a href="exams.html"><i class="fas fa-pen-fancy"></i> مركز الاختبارات</a></li>
+        <li><a href="partys.html"><i class="fas fa-microphone-alt"></i> الغرف الصوتية</a></li>
+        <li><a href="marks.html"><i class="fas fa-trophy"></i> بوابة النتائج</a></li>
+        <li><a href="questions.html"><i class="fas fa-comment-dots"></i> قسم الاستفسارات</a></li>
+        <li><a href="support.html"><i class="fas fa-shield-halved"></i> حقوق النشر</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <h1 style="font-size: 2.8rem; color: var(--gold); margin-bottom: 10px;">ساحة الالعاب</h1>
+    
+    <div class="slogan-box">
+        <p class="slogan-text">
+            "ADMIN : نحن لا نلعب لنقتل الوقت بل   <span class="highlight-gold">لنحيي العقول</span>؛ هنا تصبح الألعاب جسراً نحو <span class="highlight-gold">العبقرية</span>، 
+            فالمعرفة التي تُسقى بالمتعة هي الوحيدة التي تترسخ  في الروح لتصنع <span class="highlight-gold">القادة</span>."
+        </p>
+    </div>
+
+    <p style="margin-top: 25px; letter-spacing: 2px; color: var(--gold); font-weight: 500;">
+        استعد للتحدي.. وتصدّر قائمة النخبة
+    </p>
+</section>
+
+<div class="modal-overlay" id="shop-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-shopping-cart"></i> متجر النخبة</h3>
+            <span class="close-btn" onclick="hideModals()">&times;</span>
+        </div>
+        <div class="list-item">
+            <div>
+                <p>تغيير لون الاسم</p>
+                <small style="color: var(--gold);">يميزك في الدردشة</small>
+            </div>
+            <button class="btn-action">300 نقطة</button>
+        </div>
+        <div class="list-item">
+            <div>
+                <p>إطار ملكي للصورة</p>
+                <small style="color: var(--gold);">إطار ذهبي متحرك</small>
+            </div>
+            <button class="btn-action">750 نقطة</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="leaderboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-trophy"></i> قائمة المتصدرين</h3>
+            <span class="close-btn" onclick="hideModals()">&times;</span>
+        </div>
+        <div class="list-item" style="background: rgba(197,160,89,0.1);">
+            <span>1. محمد العتيبي</span>
+            <b style="color: var(--gold);">8500 PT</b>
+        </div>
+        <div class="list-item">
+            <span>2. ريم الشمري</span>
+            <b style="color: var(--gold);">7200 PT</b>
+        </div>
+        <div class="list-item">
+            <span>3. ياسر القحطاني</span>
+            <b style="color: var(--gold);">6900 PT</b>
+        </div>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card"><i class="fas fa-brain" style="font-size: 3rem; color: var(--gold); margin-bottom: 15px;"></i><h3>تحدي العباقرة</h3><p>اختبر ذكاءك وسرعة بديهتك</p></div>
+    <div class="card"><i class="fas fa-chess" style="font-size: 3rem; color: var(--gold); margin-bottom: 15px;"></i><h3>شطرنج النخبة</h3><p>واجه العقول الاستراتيجية</p></div>
+</div>
+
+<script>
+    /* وظيفة فتح وإغلاق القائمة */
+    function toggleMenu() {
+        document.getElementById('sideNav').classList.toggle('active');
+        document.getElementById('overlayMenu').classList.toggle('active');
+    }
+
+    function showModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function hideModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            hideModals();
+        }
+    }
+</script>
+
+</body>
+</html>
