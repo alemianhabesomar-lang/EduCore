@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكاديمية النخبة الملكية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0a192f;
+            --gold: #c5a059;
+            --black: #050a14;
+            --white: #ffffff; 
+            --text-gray: #e0e0e0; 
+            --gold-gradient: linear-gradient(45deg, #c5a059, #f7e0a1, #8e6d2d);
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; transition: 0.3s; }
+        body { background-color: var(--black); color: var(--white); overflow-x: hidden; line-height: 1.6; }
+
+        header {
+            background: rgba(10, 25, 47, 0.95); backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--gold); padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--gold); text-decoration: none; text-shadow: 0 2px 10px rgba(197, 160, 89, 0.3); }
+
+        .profile-trigger {
+            display: flex; align-items: center; gap: 12px; cursor: pointer;
+            padding: 8px 18px; border-radius: 50px; border: 2px solid var(--gold);
+            background: var(--glass); color: var(--white); font-weight: bold;
+        }
+
+        .nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
+
+        .btn-gold { 
+            background: var(--gold-gradient); color: var(--black); 
+            padding: 10px 28px; border-radius: 12px; border:none; 
+            font-weight: 800; cursor:pointer; text-decoration:none; 
+            display:inline-block; font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+        }
+
+        /* --- القائمة الجانبية (حجم متوسط ومتوازن) --- */
+        .side-nav { 
+            position: fixed; 
+            top: 0; 
+            right: -320px; 
+            width: 300px; /* عرض متوسط */
+            height: 100%; 
+            background: var(--navy); 
+            border-left: 3px solid var(--gold); 
+            z-index: 2000; 
+            padding: 25px 20px; 
+            display: flex;
+            flex-direction: column;
+        }
+        .side-nav.active { right: 0; }
+
+        .side-nav h2 {
+            color: var(--gold); 
+            text-align: center; 
+            font-size: 1.6rem; 
+            border-bottom: 2px solid var(--gold); 
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .side-nav ul { 
+            list-style: none; 
+            overflow-y: auto; 
+            flex-grow: 1;
+            padding-bottom: 20px;
+        }
+
+        /* سكرول بار أنيق */
+        .side-nav ul::-webkit-scrollbar { width: 5px; }
+        .side-nav ul::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        .side-nav ul li a { 
+            color: var(--white); 
+            text-decoration: none; 
+            padding: 11px 15px; /* مسافة متوسطة مريحة */
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            border-radius: 10px; 
+            margin-bottom: 7px; 
+            font-weight: 600; 
+            font-size: 1.05rem; /* خط متوسط وواضح */
+            border: 1px solid transparent; 
+        }
+        .side-nav ul li a i { width: 25px; text-align: center; font-size: 1.2rem; }
+        .side-nav ul li a:hover { 
+            background: var(--gold-gradient); 
+            color: var(--black); 
+            transform: scale(1.02); /* تأثير تكبير بسيط عند الحوم */
+        }
+
+        .hero { 
+            height: 60vh; display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; text-align: center; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1500&q=80'); 
+            background-size: cover; padding: 20px;
+        }
+        
+        .hero h1 { font-size: 4rem; color: var(--gold); text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 10px; font-weight: 900; }
+        .hero p { font-size: 1.5rem; color: var(--white); font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 60px 8%; }
+        .card { 
+            background: rgba(10, 25, 47, 0.8); 
+            border: 2px solid rgba(197, 160, 89, 0.3); 
+            padding: 45px 25px; 
+            border-radius: 25px; 
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 15px 40px rgba(197, 160, 89, 0.2); }
+        .card i { font-size: 3rem; color: var(--gold); margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(197,160,89,0.4)); }
+        .card h3 { color: var(--gold); margin-bottom: 20px; font-size: 1.8rem; font-weight: 800; }
+        .card p { color: var(--text-gray); font-size: 1.1rem; font-weight: 500; line-height: 1.8; }
+        
+        .overlay-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; backdrop-filter: blur(8px); }
+        .overlay-bg.active { display: block; }
+        .hidden { display: none; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .side-nav { width: 260px; } /* تصغير بسيط للجوال */
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay-bg" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+    <a href="index.html" class="logo">أكاديمية النخبة</a>
+    <div id="authSlot">
+        <a href="login.html" class="btn-gold">دخول النخبة</a>
+    </div>
+    <div onclick="toggleMenu()" style="font-size: 2rem; color: var(--gold); cursor: pointer;"><i class="fas fa-bars"></i></div>
+</header>
+
+<nav class="side-nav" id="sideNav">
+    <div style="text-align: left; cursor: pointer; color: var(--gold); margin-bottom: 10px;" onclick="toggleMenu()"><i class="fas fa-times-circle fa-2x"></i></div>
+    <h2>القائمة الملكية</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+        <li><a href="videos.html"><i class="fas fa-play-circle"></i> الفيديوهات التعليمية</a></li>
+        <li><a href="articals.html"><i class="fas fa-feather-alt"></i> المقالات الحصرية</a></li>
+        <li><a href="games.html"><i class="fas fa-chess"></i> ساحة الألعاب</a></li>
+        <li><a href="exams.html"><i class="fas fa-pen-fancy"></i> مركز الاختبارات</a></li>
+        <li><a href="AI.html"><i class="fas fa-robot"></i> الذكاء الاصطناعي</a></li>
+        <li><a href="partys.html"><i class="fas fa-microphone-alt"></i> الغرف الصوتية</a></li>
+        <li><a href="marks.html"><i class="fas fa-trophy"></i> بوابة النتائج</a></li>
+        <li><a href="questions.html"><i class="fas fa-comment-dots"></i> قسم الاستفسارات</a></li>
+        <li><a href="support.html"><i class="fas fa-shield-halved"></i> حقوق النشر</a></li>
+        <li id="logoutBtn" class="hidden"><a href="login.html" onclick="logout()" style="color:#ff6b6b"><i class="fas fa-power-off"></i> تسجيل خروج</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <h1>صرح العلم والرفعة</h1>
+    <p>تجربة تعليمية تتجاوز التوقعات</p>
+</section>
+
+<div class="grid">
+    <div class="card">
+        <i class="fas fa-crown"></i>
+        <h3>طريقك نحو القمة</h3>
+        <p>نحن لا نمنحك مجرد مقعد دراسي، بل نصقل فيك روح القيادة لتتربع على عرش التميز في مجال تخصصك.</p>
+    </div>
+    <div class="card">
+        <i class="fas fa-user-tie"></i>
+        <h3>نخبة المعلمين</h3>
+        <p>بين يديك عقولٌ لا تنقل المعرفة فحسب، بل تصنعها.. نخبة من أساتذة العلم كُرسوا لصناعة مستقبلك المشرق.</p>
+    </div>
+    <div class="card">
+        <i class="fas fa-scroll"></i>
+        <h3>التعلم اللامحدود</h3>
+        <p>سخرنا لك ذكاء الآلة وبصيرة الإنسان، لنسابق الزمن ونمنحك تجربة تعليمية تسبق عصرها بسنوات.</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJRA6KpLir1Jo-oVqqAANOglWEBXXn8oA",
+        authDomain: "eliteacademy-37bfc.firebaseapp.com",
+        projectId: "eliteacademy-37bfc",
+        storageBucket: "eliteacademy-37bfc.firebasestorage.app",
+        messagingSenderId: "203080953628",
+        appId: "1:203080953628:web:69efebccc336b79f0554d9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+        const slot = document.getElementById('authSlot');
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const data = userDoc.data();
+            slot.innerHTML = `
+                <div class="profile-trigger">
+                    <img src="${data?.photoURL || 'https://ui-avatars.com/api/?name=' + (data?.nickname || 'User') + '&background=c5a059&color=fff'}" class="nav-avatar">
+                    <span style="font-weight:800;">${data?.nickname || 'عضو'}</span>
+                </div>`;
+            logoutBtn.classList.remove('hidden');
+        }
+    });
+
+    window.logout = () => signOut(auth).then(() => location.reload());
+    window.toggleMenu = () => {
+        document.getElementById('sideNav').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    };
+</script>
+</body>
+</html>
