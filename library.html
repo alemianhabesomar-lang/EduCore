@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكاديمية النخبة الملكية - المكتبة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0a192f;
+            --gold: #c5a059;
+            --black: #050a14;
+            --white: #e6f1ff;
+            --gold-gradient: linear-gradient(45deg, #c5a059, #f7e0a1, #8e6d2d);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeInPage 1s forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Header (الرجوع للأصلي) --- */
+        header {
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-decoration: none; display: inline-block; }
+        .logo:hover { transform: scale(1.05); text-shadow: 0 0 15px var(--gold); }
+
+        .profile-dropdown {
+            display: none; position: absolute; left: 0; top: 50px;
+            background: var(--navy); border: 1px solid var(--gold);
+            min-width: 200px; border-radius: 12px; transform: translateY(10px);
+            opacity: 0; animation: slideUp 0.3s forwards;
+        }
+        @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+        .profile-menu:hover .profile-dropdown { display: block; }
+
+        /* --- Side Nav (الرجوع للأصلي) --- */
+        .side-nav {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+            background: linear-gradient(135deg, var(--navy), var(--black));
+            border-left: 2px solid var(--gold); z-index: 2000; padding: 40px 20px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.9);
+        }
+        .side-nav.active { right: 0; }
+        .side-nav ul li a {
+            color: var(--white); text-decoration: none; padding: 12px;
+            display: flex; align-items: center; gap: 15px; border-radius: 10px; margin-bottom: 10px;
+        }
+        .side-nav ul li a:hover { background: var(--gold-gradient); color: var(--black); padding-right: 25px; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; z-index: 1500; backdrop-filter: blur(5px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- المكتبة والبحث --- */
+        .hero-library {
+            padding: 60px 20px; text-align: center;
+            background: linear-gradient(rgba(5,10,20,0.8), rgba(5,10,20,0.9)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover; background-attachment: fixed;
+        }
+
+        .search-container { margin: 30px auto; width: 100%; max-width: 600px; position: relative; }
+        .search-container input {
+            width: 100%; padding: 15px 50px 15px 25px; border-radius: 50px;
+            border: 2px solid var(--gold); background: rgba(10,25,47,0.9); color: white; outline: none;
+        }
+
+        .categories { display: flex; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; }
+        .cat-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; font-weight: bold; }
+        .cat-btn.active { background: var(--gold-gradient); color: var(--black); }
+
+        .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px 5% 80px; }
+        .book-card { background: #0d1f3d; border-radius: 15px; overflow: hidden; border: 1px solid rgba(197, 160, 89, 0.1); }
+        .book-cover { height: 180px; background: #1a2a44; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 3.5rem; }
+        .book-info { padding: 20px; }
+        .btn-main { background: var(--gold); color: var(--black); padding: 10px; border-radius: 5px; display: block; text-align: center; font-weight: bold; text-decoration: none; margin-top: 10px; width: 100%; border:none; cursor:pointer; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--navy); border: 2px solid var(--gold); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; position: relative; }
+        .close-modal { position: absolute; left: 20px; top: 20px; color: var(--gold); cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--gold); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #050a14; color: white; outline: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+    <a href="#" class="logo">أكاديمية النخبة</a>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div class="profile-menu">
+            <button class="profile-btn" style="background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 30px; cursor: pointer;">
+                <i class="fas fa-crown"></i> الحساب الملكي
+            </button>
+            <div class="profile-dropdown">
+                <a href="#" style="display: block; padding: 12px; color: white; text-decoration: none;"><i class="fas fa-user"></i> الملف الشخصي</a>
+                <a href="#" style="display: block; padding: 12px; color: white; text-decoration: none;"><i class="fas fa-gem"></i> درجات النخبة</a>
+                <hr style="border: 0.1px solid rgba(197,160,89,0.2)">
+                <a href="#" style="display: block; padding: 12px; color: #ff4d4d; text-decoration: none;"><i class="fas fa-power-off"></i> خروج</a>
+            </div>
+        </div>
+        <div class="menu-dots" onclick="toggleMenu()" style="font-size: 1.8rem; color: var(--gold); cursor: pointer;">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
+
+<nav class="side-nav" id="sideNav">
+    <div style="text-align: left; cursor: pointer; color: var(--gold);" onclick="toggleMenu()">
+        <i class="fas fa-times-circle fa-2x"></i>
+    </div>
+    <h2 style="color: var(--gold); text-align: center; margin: 20px 0;">القائمة الملكية</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+        <li><a href="videos.html"><i class="fas fa-play-circle"></i> الفيديوهات التعليمية</a></li>
+        <li><a href="articals.html"><i class="fas fa-feather-alt"></i> المقالات الحصرية</a></li>
+        <li><a href="games.html"><i class="fas fa-chess"></i> ساحة الألعاب</a></li>
+        <li><a href="exams.html"><i class="fas fa-pen-fancy"></i> مركز الاختبارات</a></li>
+        <li><a href="partys.html"><i class="fas fa-microphone-alt"></i> الغرف الصوتية</a></li>
+        <li><a href="marks.html"><i class="fas fa-trophy"></i> بوابة النتائج</a></li>
+        <li><a href="questions.html"><i class="fas fa-comment-dots"></i> قسم الاستفسارات</a></li>
+        <li><a href="support.html"><i class="fas fa-shield-halved"></i> حقوق النشر</a></li>
+    </ul>
+</nav>
+
+<section class="hero-library">
+    <h1 style="color: var(--gold); font-size: 2.5rem;">مكتبة المراجع الملكية</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="ابحث في المكتبة..." onkeyup="filterBooks()">
+        <i class="fas fa-search" style="position:absolute; right:20px; top:18px; color:var(--gold);"></i>
+    </div>
+</section>
+
+<div class="categories">
+    <button class="cat-btn active" onclick="filterCategory('الكل', this)">الكل</button>
+    <button class="cat-btn" onclick="filterCategory('كتب', this)">كتب</button>
+    <button class="cat-btn" onclick="filterCategory('ملخصات', this)">ملخصات</button>
+    <button class="cat-btn" onclick="filterCategory('اختبارات', this)">اختبارات</button>
+</div>
+
+<div class="books-grid" id="booksGrid">
+    <div class="book-card" data-title="فيزياء النخبة" data-category="كتب">
+        <div class="book-cover"><i class="fas fa-atom"></i></div>
+        <div class="book-info"><h3>فيزياء النخبة</h3><p>د. سليم القاضي</p><button class="btn-main">تحميل</button></div>
+    </div>
+    <div class="book-card" data-title="بنك أسئلة الرياضيات" data-category="اختبارات">
+        <div class="book-cover"><i class="fas fa-calculator"></i></div>
+        <div class="book-info"><h3>بنك أسئلة الرياضيات</h3><p>لجنة الخبراء</p><button class="btn-main">تحميل</button></div>
+    </div>
+</div>
+
+<div class="modal" id="uploadModal">
+    <div class="modal-content">
+        <i class="fas fa-times close-modal" onclick="closeModal()"></i>
+        <h2 style="color:var(--gold); text-align:center; margin-bottom:20px;">إضافة مرجع جديد</h2>
+        <form id="uploadForm">
+            <div class="form-group"><label>اسم المرجع</label><input type="text" id="bTitle" required></div>
+            <div class="form-group"><label>اسم المؤلف</label><input type="text" id="bAuthor" required></div>
+            <div class="form-group"><label>التصنيف</label><select id="bCat"><option value="كتب">كتب</option><option value="ملخصات">ملخصات</option><option value="اختبارات">اختبارات</option></select></div>
+            <button type="submit" class="btn-main">نشر المرجع</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('sideNav').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function openModal() { document.getElementById('uploadModal').style.display = 'flex'; toggleMenu(); }
+    function closeModal() { document.getElementById('uploadModal').style.display = 'none'; }
+
+    let currentCat = 'الكل';
+    function filterCategory(c, b) {
+        currentCat = c;
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        b.classList.add('active');
+        filterBooks();
+    }
+
+    function filterBooks() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.book-card').forEach(card => {
+            const t = card.getAttribute('data-title').toLowerCase();
+            const c = card.getAttribute('data-category');
+            card.style.display = (t.includes(q) && (currentCat === 'الكل' || c === currentCat)) ? 'block' : 'none';
+        });
+    }
+
+    document.getElementById('uploadForm').onsubmit = function(e) {
+        e.preventDefault();
+        const title = document.getElementById('bTitle').value;
+        const author = document.getElementById('bAuthor').value;
+        const category = document.getElementById('bCat').value;
+        
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.setAttribute('data-title', title);
+        card.setAttribute('data-category', category);
+        card.innerHTML = `<div class="book-cover"><i class="fas fa-book"></i></div><div class="book-info"><h3>${title}</h3><p>${author}</p><button class="btn-main">تحميل</button></div>`;
+        
+        document.getElementById('booksGrid').prepend(card);
+        closeModal();
+        this.reset();
+    };
+</script>
+
+</body>
+</html>
