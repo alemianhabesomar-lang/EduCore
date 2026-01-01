@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المقالات الحصرية | أكاديمية النخبة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0a192f;
+            --gold: #c5a059;
+            --black: #050a14;
+            --white: #e6f1ff;
+            --gold-gradient: linear-gradient(45deg, #c5a059, #f7e0a1, #8e6d2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeInPage 1s forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .side-nav {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--navy), var(--black));
+            border-left: 2px solid var(--gold);
+            z-index: 2000;
+            padding: 40px 20px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.9);
+        }
+
+        .side-nav.active { right: 0; }
+
+        .side-nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .side-nav ul li a:hover {
+            background: var(--gold-gradient);
+            color: var(--black);
+            padding-right: 25px;
+        }
+
+        .hero {
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(5, 10, 20, 0.7), rgba(5, 10, 20, 0.9)), 
+                        url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 60px 8%;
+        }
+
+        .article-card {
+            background: rgba(10, 25, 47, 0.4);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .article-content {
+            padding: 25px;
+        }
+
+        .article-tag {
+            color: var(--gold);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .article-content h3 {
+            margin-bottom: 15px;
+            color: var(--white);
+            line-height: 1.4;
+        }
+
+        .article-content p {
+            color: #a8b2d1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .read-more:hover { gap: 15px; }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            z-index: 1500;
+            backdrop-filter: blur(5px);
+        }
+        .overlay.active { display: block; }
+
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+    <a href="#" class="logo">أكاديمية النخبة</a>
+    
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <button class="profile-btn" style="background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 30px;">
+            <i class="fas fa-crown"></i> الحساب الملكي
+        </button>
+        <div class="menu-dots" onclick="toggleMenu()" style="font-size: 1.8rem; color: var(--gold); cursor: pointer;">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
+
+<nav class="side-nav" id="sideNav">
+    <div style="text-align: left; cursor: pointer; color: var(--gold);" onclick="toggleMenu()">
+        <i class="fas fa-times-circle fa-2x"></i>
+    </div>
+    <h2 style="color: var(--gold); text-align: center; margin: 20px 0;">القائمة الملكية</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+        <li><a href="videos.html"><i class="fas fa-play-circle"></i> الفيديوهات التعليمية</a></li>
+        <li><a href="games.html"><i class="fas fa-chess"></i> ساحة الألعاب</a></li>
+        <li><a href="library.html"><i class="fas fa-book-open"></i> مكتبة المراجع</a></li>
+        <li><a href="exams.html"><i class="fas fa-pen-fancy"></i> مركز الاختبارات</a></li>
+        <li><a href="partys.html"><i class="fas fa-microphone-alt"></i> الغرف الصوتية</a></li>
+        <li><a href="marks.html"><i class="fas fa-trophy"></i> بوابة النتائج</a></li>
+        <li><a href="questions.html"><i class="fas fa-comment-dots"></i> قسم الاستفسارات</a></li>
+        <li><a href="support.html"><i class="fas fa-shield-halved"></i> حقوق النشر</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <h1 style="font-size: 2.5rem; color: var(--gold);">مدونة النخبة الفكرية</h1>
+    <p style="margin-top: 10px; color: #ccd6f6;">حيث تُكتب المعرفة بماء الذهب</p>
+</section>
+
+<div class="articles-grid">
+    <article class="article-card">
+        <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=500&q=60');"></div>
+        <div class="article-content">
+            <span class="article-tag">فلسفة النجاح</span>
+            <h3>كيف تبني عقلية النخبة في التعلم الذاتي؟</h3>
+            <p>استراتيجيات متقدمة لتنظيم الوقت واكتساب المهارات المعقدة في زمن قياسي باستخدام أساليب الذاكرة الحديثة...</p>
+            <a href="#" class="read-more">اقرأ المقال الملكي <i class="fas fa-long-arrow-alt-left"></i></a>
+        </div>
+    </article>
+
+    <article class="article-card">
+        <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=500&q=60');"></div>
+        <div class="article-content">
+            <span class="article-tag">علوم المستقبل</span>
+            <h3>الذكاء الاصطناعي: هل يحل محل المعلم؟</h3>
+            <p>تحليل عميق لدور التقنيات الناشئة في تغيير خارطة التعليم العالمية وكيف تستفيد منها كطالب متميز...</p>
+            <a href="#" class="read-more">اقرأ المقال الملكي <i class="fas fa-long-arrow-alt-left"></i></a>
+        </div>
+    </article>
+
+    <article class="article-card">
+        <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=500&q=60');"></div>
+        <div class="article-content">
+            <span class="article-tag">مكتبة النخبة</span>
+            <h3>أهم 5 كتب يجب أن يقرأها كل باحث عن التميز</h3>
+            <p>مراجعة شاملة لمؤلفات غيرت مجرى التاريخ الفكري، وكيف يمكن لتطبيق مبادئها أن يغير مستواك الدراسي...</p>
+            <a href="#" class="read-more">اقرأ المقال الملكي <i class="fas fa-long-arrow-alt-left"></i></a>
+        </div>
+    </article>
+</div>
+
+<footer style="padding: 40px; text-align: center; border-top: 1px solid var(--gold); background: var(--black);">
+    <p style="color: var(--gold);">جميع الحقوق محفوظة © 2025 أكاديمية النخبة</p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('sideNav').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    document.querySelectorAll('.article-card, button').forEach(element => {
+        element.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        element.addEventListener('mouseup', function() {
+            this.style.transform = '';
+        });
+    });
+</script>
+
+</body>
+</html>

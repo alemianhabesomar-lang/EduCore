@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Universe | Pro Admin Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5865f2; 
+            --neon: #00f2ff; 
+            --bg: #050505;
+            --side: #0f0f13; 
+            --chat: #15151b; 
+            --border: rgba(255,255,255,0.06);
+            --danger: #ed4245; 
+            --success: #23a559;
+            --warning: #fee75c;
+            --glass: rgba(255, 255, 255, 0.05);
+            --admin-gold: #ffaa00;
+        }
+
+        /* الأساسيات */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: var(--bg); color: #fff; height: 100vh; display: flex; overflow: hidden; }
+
+        /* --- 1. شريط السيرفرات (Server Rail) --- */
+        .srv-rail { width: 75px; background: #000; display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 15px; border-left: 1px solid var(--border); z-index: 200; }
+        .srv-node { width: 50px; height: 50px; border-radius: 50%; background: #222; cursor: pointer; transition: 0.4s; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; position: relative; border: 2px solid transparent; }
+        .srv-node:hover, .srv-node.active { border-radius: 15px; border-color: var(--neon); box-shadow: 0 0 15px var(--primary); }
+        .add-btn { color: var(--success); border: 2px dashed #333; font-size: 1.3rem; }
+
+        /* --- 2. الشريط الجانبي (Sidebar) --- */
+        .sidebar { width: 260px; background: var(--side); display: flex; flex-direction: column; border-left: 1px solid var(--border); z-index: 190; }
+        .srv-header { padding: 25px 20px; font-weight: 900; border-bottom: 1px solid var(--border); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+        .chn-box { flex: 1; padding: 20px; overflow-y: auto; }
+        .chn-head { font-size: 0.75rem; color: #555; text-transform: uppercase; margin: 20px 0 10px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .chn-head i { cursor: pointer; transition: 0.3s; color: var(--neon); }
+        .chn-link { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: #8e9297; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; transition: 0.2s; position: relative; }
+        .chn-link:hover, .chn-link.active { background: rgba(255,255,255,0.05); color: #fff; }
+        .del-chn { position: absolute; left: 10px; opacity: 0; color: var(--danger); transition: 0.3s; }
+        .chn-link:hover .del-chn { opacity: 1; }
+
+        /* --- 3. المنطقة الرئيسية (Main Content) --- */
+        .main { flex: 1; display: flex; flex-direction: column; background: var(--chat); overflow: hidden; position: relative; }
+
+        /* --- 4. واجهة الهولوغرام المحدثة --- */
+        #voice-view { display: none; height: 100%; width: 100%; position: absolute; inset: 0; align-items: center; justify-content: center; flex-direction: column; background: radial-gradient(circle at center, #111 0%, #000 100%); z-index: 100; }
+        #canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4; }
+        
+        .hologram-rings { position: absolute; width: 300px; height: 300px; border: 1px solid var(--neon); border-radius: 50%; opacity: 0.2; animation: pulse 2s infinite linear; }
+        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        .v-interface { z-index: 110; text-align: center; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        .v-avatar { width: 160px; height: 160px; border-radius: 50%; background: rgba(88, 101, 242, 0.2); display: flex; align-items: center; justify-content: center; font-size: 4rem; position: relative; border: 2px solid var(--neon); transition: 0.2s; box-shadow: 0 0 50px rgba(0, 242, 255, 0.3); z-index: 5; }
+        
+        .edu-controls { 
+            position: absolute; bottom: 40px; display: flex; gap: 12px; z-index: 150; 
+            background: rgba(0,0,0,0.6); padding: 15px 25px; border-radius: 50px; border: 1px solid var(--border); backdrop-filter: blur(10px);
+        }
+        
+        .ctrl-btn { 
+            width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--glass); color: #fff; 
+            cursor: pointer; transition: 0.3s; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; 
+        }
+        .ctrl-btn:hover { background: #333; transform: translateY(-3px); }
+        .ctrl-btn.active { background: var(--primary); box-shadow: 0 0 20px var(--primary); }
+        .ctrl-btn.danger { background: var(--danger); color: white; }
+        .ctrl-btn.danger:hover { box-shadow: 0 0 20px var(--danger); }
+        .ctrl-btn.warning.active { background: var(--warning); color: #000; }
+
+        /* --- 5. اللوح الذكي --- */
+        #wb-container { position: absolute; width: 85%; height: 75%; background: white; border-radius: 15px; display: none; z-index: 140; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+        canvas#whiteboard { width: 100%; height: 100%; cursor: crosshair; }
+        .wb-tools { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 10px; background: #333; padding: 10px; border-radius: 10px; }
+        .wb-tools button { background: none; border: none; color: white; cursor: pointer; font-size: 1.1rem; }
+
+        /* --- 6. بث الفيديو والكامل --- */
+        .stream-overlay { position: absolute; top: 20px; right: 20px; width: 220px; display: flex; flex-direction: column; gap: 15px; z-index: 130; }
+        .stream-box { background: #111; border: 2px solid var(--neon); border-radius: 12px; overflow: hidden; height: 140px; display: none; box-shadow: 0 0 15px rgba(0,242,255,0.2); }
+        
+        /* تصميم مشاركة الشاشة في المنتصف */
+        #screen-box.fullscreen-mode {
+            display: none;
+            width: 80%;
+            height: 65%;
+            position: relative;
+            z-index: 120;
+            border-radius: 20px;
+            border: 4px solid var(--neon);
+            box-shadow: 0 0 30px var(--neon);
+        }
+
+        video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+        /* --- 7. واجهة الدردشة --- */
+        #chat-view { display: flex; flex-direction: column; height: 100%; }
+        .msg-list { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { display: flex; gap: 12px; animation: slide 0.3s ease; position: relative; }
+        @keyframes slide { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        .avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        .msg-input-area { padding: 20px; background: var(--chat); border-top: 1px solid var(--border); }
+        .input-wrap { background: #222; padding: 12px 20px; border-radius: 10px; display: flex; align-items: center; gap: 15px; }
+        .input-wrap input { background: none; border: none; color: #fff; flex: 1; outline: none; }
+
+        /* --- 8. المودال وقوائم الإدارة --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-box { background: #18191c; padding: 35px; border-radius: 20px; width: 350px; text-align: center; border: 1px solid var(--border); }
+        .m-btn { width: 100%; padding: 12px; border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+
+        .admin-menu {
+            position: fixed; background: #111214; border: 1px solid var(--border); border-radius: 8px;
+            width: 180px; display: none; flex-direction: column; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 5px;
+        }
+        .admin-item {
+            padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 0.85rem;
+            cursor: pointer; border-radius: 5px; transition: 0.2s; color: #bbb;
+        }
+        .admin-item:hover { background: var(--primary); color: #fff; }
+        .admin-item.danger:hover { background: var(--danger); }
+        .divider { height: 1px; background: var(--border); margin: 5px 0; }
+
+    </style>
+</head>
+<body>
+
+    <div id="admin-ctx" class="admin-menu">
+        <div class="admin-item" onclick="adminAction('MUTE')"><i class="fas fa-microphone-slash"></i> Mute Server</div>
+        <div class="admin-item" onclick="adminAction('DEAFEN')"><i class="fas fa-volume-mute"></i> Deafen Server</div>
+        <div class="admin-item" onclick="adminAction('MOVE')"><i class="fas fa-right-to-bracket"></i> Move Room</div>
+        <div class="admin-item" onclick="adminAction('DISCONNECT')"><i class="fas fa-phone-slash"></i> Disconnect</div>
+        <div class="divider"></div>
+        <div class="admin-item warning" onclick="adminAction('TIMEOUT')"><i class="fas fa-clock"></i> Timeout</div>
+        <div class="admin-item danger" onclick="adminAction('KICK')"><i class="fas fa-user-minus"></i> Kick</div>
+        <div class="admin-item danger" onclick="adminAction('BAN')"><i class="fas fa-gavel"></i> Ban</div>
+        <div class="divider"></div>
+        <div class="admin-item" onclick="adminAction('ADD_ROLE')"><i class="fas fa-user-tag"></i> Give Role</div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-box">
+            <h2 id="modal-title">إضافة جديد</h2>
+            <div id="srv-img-sec" style="display:none">
+                <div id="p-img-preview" onclick="document.getElementById('f-in').click()" style="width:70px; height:70px; background:#333; border-radius:20px; margin:20px auto; cursor:pointer; display:flex; align-items:center; justify-content:center; background-size:cover;">+</div>
+                <input type="file" id="f-in" hidden onchange="handleSrvImg(this)">
+            </div>
+            <input type="text" id="modal-input" placeholder="اكتب الاسم هنا..." autocomplete="off" style="width:100%; padding:10px; margin-bottom:15px; background:#222; border:1px solid #444; color:#fff; border-radius:5px;">
+            <button id="modal-confirm-btn" class="m-btn" style="background:var(--primary)">تأكيد</button>
+            <button onclick="closeModal()" class="m-btn" style="background:transparent; color:#777;">إلغاء</button>
+        </div>
+    </div>
+
+    <div class="srv-rail">
+        <div class="srv-node active" onclick="location.reload()"><i class="fas fa-bolt"></i></div>
+        <div id="srv-list" style="display:contents"></div>
+        <div class="srv-node add-btn" onclick="openModal('SRV')"><i class="fas fa-plus"></i></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="srv-header" id="active-srv-name">إختر سيرفر</div>
+        <div class="chn-box">
+            <div class="chn-head"><span>القنوات النصية</span> <i class="fas fa-plus-circle" onclick="openModal('TEXT')"></i></div>
+            <div id="text-chn-list"></div>
+
+            <div class="chn-head"><span>غرف الهولوغرام</span> <i class="fas fa-plus-circle" onclick="openModal('VOICE')"></i></div>
+            <div id="voice-chn-list"></div>
+        </div>
+    </div>
+
+    <main class="main">
+        <div id="voice-view">
+            <div class="hologram-rings"></div>
+            <div class="hologram-rings" style="animation-delay: 0.5s"></div>
+            <canvas id="canvas"></canvas>
+            
+            <div class="stream-overlay">
+                <div class="stream-box" id="cam-box"><video id="v-cam" autoplay playsinline></video></div>
+            </div>
+
+            <div class="stream-box fullscreen-mode" id="screen-box">
+                <video id="v-screen" autoplay playsinline></video>
+            </div>
+
+            <div id="wb-container">
+                <canvas id="whiteboard"></canvas>
+                <div class="wb-tools">
+                    <button onclick="wbTool='pen'"><i class="fas fa-pen"></i></button>
+                    <button onclick="wbTool='eraser'"><i class="fas fa-eraser"></i></button>
+                    <input type="range" min="1" max="50" value="3" oninput="wbWidth=this.value" style="width:80px">
+                    <div style="width:15px; height:15px; background:red; border-radius:50%; cursor:pointer;" onclick="wbColor='red'"></div>
+                    <div style="width:15px; height:15px; background:blue; border-radius:50%; cursor:pointer;" onclick="wbColor='blue'"></div>
+                    <button onclick="saveWB()"><i class="fas fa-download"></i></button>
+                    <button onclick="clearWB()" style="color:var(--danger)"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+
+            <div class="v-interface">
+                <div class="v-avatar" id="v-glow">
+                    <i class="fas fa-microphone-lines"></i>
+                </div>
+                <h1 id="v-room-title" style="font-size: 2rem; text-shadow: 0 0 10px var(--neon);">الغرفة الصوتية</h1>
+                <p id="room-status" style="color:var(--neon); letter-spacing:4px; font-weight:bold; font-size:0.8rem;">ADMIN MODE ENABLED</p>
+                
+                <div class="edu-controls">
+                    <button class="ctrl-btn" title="الميكروفون" id="btn-mic" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
+                    <button class="ctrl-btn" title="الكاميرا" id="btn-cam" onclick="toggleCam()"><i class="fas fa-video"></i></button>
+                    <button class="ctrl-btn" title="مشاركة الشاشة" id="btn-screen" onclick="toggleScreen()"><i class="fas fa-desktop"></i></button>
+                    <button class="ctrl-btn" title="السبورة الذكية" id="btn-board" onclick="toggleBoard()"><i class="fas fa-chalkboard-user"></i></button>
+                    
+                    <button class="ctrl-btn" title="كتم الصوت للجميع" id="btn-mute-all" onclick="toggleDeafen()"><i class="fas fa-volume-xmark"></i></button>
+                    <button class="ctrl-btn warning" title="رفع اليد" id="btn-hand" onclick="toggleHand()"><i class="fas fa-hand-paper"></i></button>
+                    <button class="ctrl-btn" title="تسجيل المحادثة" id="btn-record" onclick="recordConversation()"><i class="fas fa-circle"></i></button>
+                    <button class="ctrl-btn" title="قفل الغرفة" id="btn-lock" onclick="toggleLock()"><i class="fas fa-lock"></i></button>
+                    
+                    <button class="ctrl-btn danger" title="إنهاء المكالمة" onclick="exitVoice()"><i class="fas fa-phone-slash"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat-view">
+            <div class="msg-list" id="msg-screen"></div>
+            <div class="msg-input-area">
+                <div class="input-wrap">
+                    <input type="text" id="chat-in" placeholder="أرسل رسالة..." onkeypress="if(event.key === 'Enter') sendMsg()">
+                    <i class="fas fa-paper-plane" style="color:var(--primary); cursor:pointer" onclick="sendMsg()"></i>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('elite_ultra_db')) || [];
+        let curSrvIdx = -1, curChnIdx = -1, tempImg = "", modalMode = "";
+        let audioCtx, analyser, dataArray, animId, microphoneStream;
+        let wbTool='pen', wbColor='black', wbWidth=3, drawing=false;
+        let camStream, screenStream;
+
+        // --- نظام الإدارة ---
+        window.addEventListener('contextmenu', e => {
+            const msg = e.target.closest('.msg');
+            const chn = e.target.closest('.chn-link');
+            if (msg || chn) {
+                e.preventDefault();
+                const menu = document.getElementById('admin-ctx');
+                menu.style.display = 'flex';
+                menu.style.left = e.pageX + 'px';
+                menu.style.top = e.pageY + 'px';
+            } else {
+                document.getElementById('admin-ctx').style.display = 'none';
+            }
+        });
+        window.onclick = () => document.getElementById('admin-ctx').style.display = 'none';
+
+        function adminAction(action) {
+            alert(`[نظام الإدارة]: تم تنفيذ الإجراء ${action} بنجاح.`);
+        }
+
+        // --- المودال وقواعد البيانات ---
+        function openModal(mode) {
+            modalMode = mode;
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('srv-img-sec').style.display = (mode === 'SRV') ? 'block' : 'none';
+        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        
+        function processModal() {
+            const val = document.getElementById('modal-input').value;
+            if(!val) return;
+            if(modalMode === 'SRV') {
+                db.push({ name: val, img: tempImg, roles: [], textChns: [{name:'عام', msgs:[]}], voiceChns: [{name:'الغرفة الرئيسية'}] });
+            } else if(modalMode === 'TEXT') {
+                db[curSrvIdx].textChns.push({ name: val, msgs: [] });
+            } else if(modalMode === 'VOICE') {
+                db[curSrvIdx].voiceChns.push({ name: val });
+            }
+            save(); render(); closeModal();
+        }
+
+        function save() { localStorage.setItem('elite_ultra_db', JSON.stringify(db)); }
+
+        // --- التحكم بالوسائط والتحسينات المطلوبة ---
+        async function toggleScreen() {
+            const v = document.getElementById('v-screen');
+            const box = document.getElementById('screen-box');
+            const avatar = document.querySelector('.v-avatar');
+            const btn = document.getElementById('btn-screen');
+
+            if(!screenStream) {
+                try {
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                    v.srcObject = screenStream;
+                    
+                    // إخفاء الأفاتار وإظهار الشاشة مكانه
+                    avatar.style.display = 'none';
+                    box.style.display = 'block';
+                    btn.classList.add('active');
+
+                    screenStream.getVideoTracks()[0].onended = () => toggleScreen();
+                } catch(e) { console.log("Screen share cancelled"); }
+            } else {
+                screenStream.getTracks().forEach(t => t.stop());
+                screenStream = null;
+                avatar.style.display = 'flex';
+                box.style.display = 'none';
+                btn.classList.remove('active');
+            }
+        }
+
+        async function toggleCam() {
+            const v = document.getElementById('v-cam');
+            const box = document.getElementById('cam-box');
+            if(!camStream) {
+                try {
+                    camStream = await navigator.mediaDevices.getUserMedia({video:true});
+                    v.srcObject = camStream; box.style.display = 'block';
+                    document.getElementById('btn-cam').classList.add('active');
+                } catch(e) { alert("الكاميرا غير متوفرة!"); }
+            } else {
+                camStream.getTracks().forEach(t=>t.stop()); camStream=null;
+                box.style.display = 'none'; document.getElementById('btn-cam').classList.remove('active');
+            }
+        }
+
+        function toggleMic() {
+            if (microphoneStream) {
+                const track = microphoneStream.getAudioTracks()[0];
+                track.enabled = !track.enabled;
+                document.getElementById('btn-mic').classList.toggle('active');
+            }
+        }
+
+        function toggleDeafen() {
+            const btn = document.getElementById('btn-mute-all');
+            btn.classList.toggle('danger');
+            alert(btn.classList.contains('danger') ? "تم كتم الصوت عن الجميع" : "تم إلغاء كتم الجميع");
+        }
+
+        function toggleHand() {
+            const btn = document.getElementById('btn-hand');
+            btn.classList.toggle('active');
+            if(btn.classList.contains('active')) alert("قمت برفع يدك لطلب التحدث ✋");
+        }
+
+        function toggleLock() {
+            const btn = document.getElementById('btn-lock');
+            btn.classList.toggle('active');
+            document.getElementById('room-status').innerText = btn.classList.contains('active') ? "ROOM LOCKED" : "ADMIN MODE ENABLED";
+        }
+
+        function recordConversation() {
+            const btn = document.getElementById('btn-record');
+            btn.classList.toggle('danger');
+            if(!btn.classList.contains('danger')) {
+                alert("تم حفظ سجل المحادثة النصية بنجاح.");
+            }
+        }
+
+        // --- السبورة ---
+        const wb = document.getElementById('whiteboard');
+        const wctx = wb.getContext('2d');
+        function toggleBoard() {
+            const container = document.getElementById('wb-container');
+            const isShown = container.style.display === 'block';
+            container.style.display = isShown ? 'none' : 'block';
+            document.getElementById('btn-board').classList.toggle('active');
+            if(!isShown) { wb.width = container.offsetWidth; wb.height = container.offsetHeight; setupWB(); }
+        }
+        function setupWB() {
+            wb.onmousedown = (e) => { drawing=true; drawWB(e); };
+            wb.onmousemove = drawWB;
+            window.onmouseup = () => { drawing=false; wctx.beginPath(); };
+        }
+        function drawWB(e) {
+            if(!drawing) return;
+            wctx.lineWidth = wbTool==='eraser' ? wbWidth*5 : wbWidth;
+            wctx.strokeStyle = wbTool==='eraser' ? '#fff' : wbColor;
+            wctx.lineCap = 'round';
+            const r = wb.getBoundingClientRect();
+            wctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+            wctx.stroke(); wctx.beginPath(); wctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+        }
+        function clearWB() { wctx.clearRect(0,0,wb.width, wb.height); }
+        function saveWB() { 
+            const link = document.createElement('a'); link.download = 'board.png';
+            link.href = wb.toDataURL(); link.click();
+        }
+
+        // --- النظام الأساسي والواجهة ---
+        async function startVoice(name) {
+            switchUI('VOICE');
+            document.getElementById('v-room-title').innerText = name;
+            try {
+                microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                const source = audioCtx.createMediaStreamSource(microphoneStream);
+                source.connect(analyser);
+                analyser.fftSize = 64;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                drawVoice();
+            } catch(e) { exitVoice(); }
+        }
+
+        function drawVoice() {
+            animId = requestAnimationFrame(drawVoice);
+            analyser.getByteFrequencyData(dataArray);
+            const cvs = document.getElementById('canvas');
+            const ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+            ctx.clearRect(0,0,cvs.width, cvs.height);
+            let sum = 0;
+            dataArray.forEach((v, i) => {
+                sum += v;
+                ctx.fillStyle = `rgba(0, 242, 255, ${v/300})`;
+                ctx.fillRect(i * (cvs.width/32), cvs.height, 15, -v * 4);
+            });
+            document.getElementById('v-glow').style.transform = `scale(${1 + (sum/dataArray.length)/200})`;
+        }
+
+        function exitVoice() { 
+            cancelAnimationFrame(animId); 
+            if(microphoneStream) microphoneStream.getTracks().forEach(t=>t.stop());
+            if(camStream) camStream.getTracks().forEach(t=>t.stop());
+            if(screenStream) screenStream.getTracks().forEach(t=>t.stop());
+            switchUI('CHAT'); 
+        }
+
+        function render() {
+            const sList = document.getElementById('srv-list'); sList.innerHTML = "";
+            db.forEach((s, i) => {
+                const node = document.createElement('div');
+                node.className = `srv-node ${curSrvIdx === i ? 'active' : ''}`;
+                if(s.img) node.style.backgroundImage = `url('${s.img}')`; else node.innerText = s.name[0];
+                node.onclick = () => { curSrvIdx = i; curChnIdx = 0; render(); };
+                sList.appendChild(node);
+            });
+            if(curSrvIdx > -1) {
+                const s = db[curSrvIdx];
+                document.getElementById('active-srv-name').innerText = s.name;
+                const tList = document.getElementById('text-chn-list'); tList.innerHTML = "";
+                s.textChns.forEach((c, i) => {
+                    const div = document.createElement('div');
+                    div.className = `chn-link ${curChnIdx === i ? 'active' : ''}`;
+                    div.innerHTML = `<i class="fas fa-hashtag"></i> ${c.name}`;
+                    div.onclick = () => { curChnIdx = i; switchUI('CHAT'); render(); };
+                    tList.appendChild(div);
+                });
+                const vList = document.getElementById('voice-chn-list'); vList.innerHTML = "";
+                s.voiceChns.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = `chn-link`;
+                    div.innerHTML = `<i class="fas fa-waveform-lines"></i> ${v.name}`;
+                    div.onclick = () => startVoice(v.name);
+                    vList.appendChild(div);
+                });
+                loadMsgs();
+            }
+        }
+
+        function switchUI(m) { 
+            document.getElementById('chat-view').style.display = m === 'CHAT' ? 'flex' : 'none';
+            document.getElementById('voice-view').style.display = m === 'VOICE' ? 'flex' : 'none';
+        }
+
+        function sendMsg() {
+            const inp = document.getElementById('chat-in');
+            if(!inp.value) return;
+            db[curSrvIdx].textChns[curChnIdx].msgs.push({ u: 'أنت', t: inp.value });
+            inp.value = ""; save(); loadMsgs();
+        }
+
+        function loadMsgs() {
+            const scr = document.getElementById('msg-screen'); scr.innerHTML = "";
+            db[curSrvIdx]?.textChns[curChnIdx]?.msgs.forEach(m => {
+                const d = document.createElement('div'); d.className = 'msg';
+                d.innerHTML = `<div class="avatar">${m.u[0]}</div><div class="msg-content"><h4>${m.u}</h4><p>${m.t}</p></div>`;
+                scr.appendChild(d);
+            });
+            scr.scrollTop = scr.scrollHeight;
+        }
+
+        if(db.length === 0) {
+            db.push({ name: 'Elite Server', img: '', roles: [], textChns: [{name:'عام', msgs:[]}], voiceChns: [{name:'الغرفة الرئيسية'}] });
+        }
+        curSrvIdx = 0; curChnIdx = 0;
+        render();
+    </script>
+</body>
+</html>

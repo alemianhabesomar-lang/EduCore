@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التواصل | أكاديمية النخبة الملكية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-dark: #0a1120;
+            --sidebar-bg: #111a2e;
+            --gold: #c5a059;
+            --white: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--navy-dark);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--navy-dark);
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4%;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+            z-index: 1000;
+        }
+
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        aside {
+            width: 260px; background: var(--sidebar-bg);
+            border-left: 1px solid rgba(197, 160, 89, 0.1);
+        }
+
+        main { flex: 1; display: flex; justify-content: center; align-items: center; background: var(--navy-dark); position: relative; }
+
+        /* --- القائمة الدائرية المصلحة --- */
+        .share-menu {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--navy-dark);
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: 0.5s;
+        }
+
+        .share-menu.active .toggle-btn { transform: rotate(315deg); background: var(--gold); }
+
+        .share-menu li {
+            position: absolute;
+            list-style: none;
+            transition: 0.5s;
+            transition-delay: calc(0.05s * var(--i));
+            transform: rotate(0deg) translateX(0px); /* تبدأ من الصفر تماماً */
+            z-index: 10;
+        }
+
+        /* توزيع الأيقونات عند الضغط */
+        .share-menu.active li {
+            /* يتم تحريك كل أيقونة بزاوية 45 درجة (360/8) */
+            transform: rotate(calc(45deg * var(--i))) translateX(120px);
+        }
+
+        .share-menu li a {
+            display: flex;
+            width: 55px;
+            height: 55px;
+            background: var(--white);
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            /* تصحيح ميلان الأيقونة الداخلية لتبقى مستقيمة */
+            transform: rotate(calc(-45deg * var(--i)));
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .share-menu li a:hover { transform: rotate(calc(-45deg * var(--i))) scale(1.2); }
+
+        /* الألوان الأصلية للتطبيقات */
+        .share-menu li:nth-child(2) a { color: #1da1f2; } 
+        .share-menu li:nth-child(3) a { color: #ff4500; } 
+        .share-menu li:nth-child(4) a { color: #0077b5; } 
+        .share-menu li:nth-child(5) a { color: #e4405f; } 
+        .share-menu li:nth-child(6) a { color: #333; }    
+        .share-menu li:nth-child(7) a { color: #ff0000; } 
+        .share-menu li:nth-child(8) a { color: #1877f2; } 
+        .share-menu li:nth-child(9) a { color: #25d366; } 
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" style="color:var(--gold); font-weight:bold; text-decoration:none;">أكاديمية النخبة</a>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <button style="background:none; border:1px solid var(--gold); color:var(--gold); padding:8px 18px; border-radius:20px;">الحساب الملكي</button>
+            <i class="fas fa-bars" style="color:var(--gold); cursor:pointer;"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside>
+            <div style="padding:20px; color:var(--gold); text-align:center;">بوابة التواصل</div>
+        </aside>
+
+        <main>
+            <ul class="share-menu" id="menu">
+                <div class="toggle-btn" onclick="toggleMenu()">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <li style="--i:0;"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li style="--i:1;"><a href="#"><i class="fab fa-reddit-alien"></i></a></li>
+                <li style="--i:2;"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                <li style="--i:3;"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li style="--i:4;"><a href="#"><i class="fab fa-github"></i></a></li>
+                <li style="--i:5;"><a href="#"><i class="fab fa-youtube"></i></a></li>
+                <li style="--i:6;"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                <li style="--i:7;"><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+            </ul>
+        </main>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
