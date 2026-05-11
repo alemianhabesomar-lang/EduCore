@@ -345,7 +345,7 @@
     </div>
 
     <ul class="sn-links">
-       <li><a href="index.html"><i class="fas fa-home"></i><span>الصفحة الرئيسية</span></a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i><span>الصفحة الرئيسية</span></a></li>
         <li><a href="videos.html"><i class="fas fa-play-circle"></i><span>الفيديوهات</span></a></li>
         <li><a href="articals.html"><i class="fas fa-feather-alt"></i><span>المقالات</span></a></li>
         <li><a href="chat.html"><i class="fas fa-robot"></i><span>المساعد الذكي</span></a></li>
@@ -359,7 +359,6 @@
         <li><a href="masarat.html"><i class="fa-solid fa-left-right"></i><span>قسم المسارات</span></a></li>
         <li><a href="family.html"><i class="fas fa-users"></i><span>الرقابة الأبوية</span></a></li>
         <li><a href="support.html"><i class="fas fa-headset"></i><span>تعريف عن الراعي</span></a></li>
-		 <li><a href="settings.html"><i class="fas fa-gear"></i><span>الاعدادات</span></a></li>
 
         <li id="dashDivider" style="display:none;">
             <div class="dash-divider"></div>
@@ -372,6 +371,47 @@
             <a href="Principal-dashboard.html"><i class="fas fa-user-shield"></i><span>لوحة الإدارة</span></a>
         </li>
     </ul>
+
+    <div style="margin-top:12px;">
+        <div class="sn-settings-toggle" id="snSettingsToggle" onclick="snToggleSettings()">
+            <span style="display:flex;align-items:center;gap:10px;"><i class="fas fa-sliders-h"></i> الإعدادات</span>
+            <i class="fas fa-chevron-down sn-settings-chevron" id="snChevron"></i>
+        </div>
+        <div class="sn-settings-panel" id="snSettingsPanel">
+            <div class="sn-settings-inner">
+                <div class="sn-s-label"><i class="fas fa-circle-half-stroke"></i> المظهر</div>
+                <div class="sn-theme-row">
+                    <div class="sn-t-opt" id="sn-th-light" onclick="snPickTheme('light')">
+                        <div class="sn-t-preview sn-t-light"></div>
+                        <div class="sn-t-label">فاتح</div>
+                        <div class="sn-t-check"><i class="fas fa-check"></i></div>
+                    </div>
+                    <div class="sn-t-opt" id="sn-th-dark" onclick="snPickTheme('dark')">
+                        <div class="sn-t-preview sn-t-dark"></div>
+                        <div class="sn-t-label">داكن</div>
+                        <div class="sn-t-check"><i class="fas fa-check"></i></div>
+                    </div>
+                </div>
+                <div class="sn-s-label" style="margin-top:14px;"><i class="fas fa-wand-magic-sparkles"></i> الجرافيك</div>
+                <div class="sn-g-row">
+                    <div class="sn-g-opt" id="sn-gr-full" onclick="snPickGraphics('full')"><span class="sn-g-icon">✨</span><div class="sn-g-name">كامل</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
+                    <div class="sn-g-opt" id="sn-gr-reduced" onclick="snPickGraphics('reduced')"><span class="sn-g-icon">🌤</span><div class="sn-g-name">مخفف</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
+                    <div class="sn-g-opt" id="sn-gr-minimal" onclick="snPickGraphics('minimal')"><span class="sn-g-icon">⚡</span><div class="sn-g-name">بسيط</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
+                </div>
+                <div class="sn-s-label" style="margin-top:14px;"><i class="fas fa-text-height"></i> حجم الخط</div>
+                <div>
+                    <input type="range" class="sn-font-slider" id="snFontSlider" min="0" max="3" step="1" value="1" oninput="snFontInput(this.value)">
+                    <div class="sn-font-labels">
+                        <span onclick="snSetFont(0)" data-idx="0">S</span>
+                        <span onclick="snSetFont(1)" data-idx="1">M</span>
+                        <span onclick="snSetFont(2)" data-idx="2">L</span>
+                        <span onclick="snSetFont(3)" data-idx="3">XL</span>
+                    </div>
+                </div>
+                <button class="sn-save-btn" onclick="snSave()">💾 حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
 
     <ul class="sn-links sn-logout" style="margin-top:16px;">
         <li><a href="#" onclick="snLogout()"><i class="fas fa-sign-out-alt"></i><span>تسجيل الخروج</span></a></li>
@@ -400,10 +440,10 @@
 
 <section class="stats-section">
     <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-number" data-i18n="stat1Title">مجتمعٌ عالمي نُعيد صياغته</div><div class="stat-label" data-i18n="stat1Desc">نستعد لاستقبال عشرة آلاف عقل طموح ليكونوا النواة الأولى لأكبر نهضة فكرية رقمية.</div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="fas fa-video"></i></div><div class="stat-number" data-i18n="stat2Title">المحتوى الذي لم يجرؤ أحد على تقديمه</div><div class="stat-label" data-i18n="stat2Desc">أكثر من 500 وحدة معرفية استغرق بناؤها شهوداً من التخطيط العميق والعمل الدؤوب.</div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="fas fa-certificate"></i></div><div class="stat-number" data-i18n="stat3Title">اعترافاتٌ تليق بكبار الطموح</div><div class="stat-label" data-i18n="stat3Desc">أكثر من 50 امتيازاً ووساماً واستحقاقاً معتمداً جاهزة لك.</div></div>
-        <div class="stat-card"><div class="stat-icon"><i class="fas fa-award"></i></div><div class="stat-number" data-i18n="stat4Title">صرامة الإتقان</div><div class="stat-label" data-i18n="stat4Desc">نخضعك لبيئة تعليمية ذكية ومستفزة لقدراتك. نحن نصممك لتكون النجاح نفسه.</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-number" data-i18n="stat1Title"> من نحن </div><div class="stat-label" data-i18n="stat1Desc">ببساطة، إحنا مجموعة من الأشخاص اللي مرّوا بنفس اللي إنت بتمر فيه حالياً. كلنا عشنا لحظات الضياع بين الكتب، والأسئلة اللي ما إلها جواب، والشعور بإنّ التعليم أحياناً بكون أصعب مما لازم يكون.</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-video"></i></div><div class="stat-number" data-i18n="stat2Title"> رؤيتنا </div><div class="stat-label" data-i18n="stat2Desc">"رؤيتنا إنك ما تمل وأنت بتتعلم. الواقع بيقول إن العقل بيفتح لما القلب يرتاح، عشان كدة هدفنا نقدم معلومة شاملة وبسيطة لكل الناس، من غير تعقيد ولا دروس مملة. إحنا هنا عشان نثبت إن العلم والترفيه ممكن يكونوا في مكان واحد."</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-certificate"></i></div><div class="stat-number" data-i18n="stat3Title"> اهدافنا </div><div class="stat-label" data-i18n="stat3Desc">"هدفنا نكسر حاجز الملل ونخلي التعليم تجربة ممتعة وشاملة لكل الأعمار. بنسعى نوفر لك معلومة حقيقية بأسلوب بسيط بيحترم وقتك وعقلك، وبدون أي تعقيد أكاديمي. إحنا هنا عشان نكون المكان اللي بتتعلم فيه بشغف، وبتكبر فيه كل يوم وأنت مروّق."</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-award"></i></div><div class="stat-number" data-i18n="stat4Title"> انجازاتنا </div><div class="stat-label" data-i18n="stat4Desc">"بدنا نثبت إنك مش محتاج تختار بين المتعة والفائدة. الواقع بيقول إننا بنتعلم أحسن وإحنا بنضحك وبشغف. رؤيتنا نكون رفيقك اليومي اللي بيبسّط لك كل شيء بوضوح، عشان تطور مهاراتك ومعارفك من غير ملل ولا تعقيد."</div></div>
     </div>
 </section>
 
@@ -427,7 +467,7 @@
         <div class="footer-section"><h3>عن SITEJ</h3><p>منصة تعليمية ذكية رائدة توفر تجربة تعليمية فريدة ومتطورة للطلاب في جميع أنحاء المنطقة.</p></div>
         <div class="footer-section"><h3>روابط سريعة</h3><a href="videos.html">الفيديوهات التعليمية</a><a href="articals.html">المقالات الحصرية</a><a href="games.html">ساحة الألعاب</a><a href="exams.html">مركز الاختبارات</a></div>
         <div class="footer-section"><h3>الدعم</h3><a href="questions.html">مركز المساعدة</a><a href="questions.html">الأسئلة الشائعة</a><a href="settings.html">الإعدادات</a></div>
-        <div class="footer-section"><h3>تواصل معنا</h3><p><i class="fas fa-envelope"></i>educationcors1@gmail.com</p><p><i class="fas fa-map-marker-alt"></i> قرية سالم, مدرسة سالم الثانوية للبنين</p></div>
+        <div class="footer-section"><h3>تواصل معنا</h3><p><i class="fas fa-envelope"></i> info@sitej.edu</p><p><i class="fas fa-map-marker-alt"></i> قرية سالم, مدرسة سالم الثانوية للبنين</p></div>
     </div>
     <div class="footer-bottom"><p>© 2026 SITEJ. جميع الحقوق محفوظة</p></div>
 </footer>
@@ -546,7 +586,7 @@ function snLogout(){
 }
 
 /* ══ NOTIFICATIONS ══ */
-function showNotifications(){alert('لديك 3 إشعارات جديدة:\n\n1. 📚 درس جديد متاح\n2. ✅ تم تقييم اختبارك\n3. 💬 رسالة جديدة من المعلم');}
+function showNotifications(){alert('لديك 3 إشعارات  جديدة:\n\n1. 📚 درس جديد متاح\n2. ✅ تم تقييم اختبارك\n3. 💬 رسالة جديدة من المعلم');}
 
 /* ══ KEYBOARD ══ */
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){snClose();document.getElementById('settingsPanel').classList.remove('open');}});
@@ -556,8 +596,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener
 
 /* ══ LANGUAGE ══ */
 var translations={
-    ar:{logoTagline:'منصة التعليم الذكية',heroBadge:'✨ مرحباً بك في المستقبل',heroTitle:'رحلتك التعليمية تبدأ هنا',heroSubtitle:'اكتشف عالماً من المعرفة والإبداع مع أفضل منصة تعليمية ذكية في المنطقة',ctaStart:'ابدأ الآن',ctaDiscover:'اكتشف المزيد',stat1Title:'مجتمعٌ عالمي نُعيد صياغته',stat1Desc:'نستعد لاستقبال عشرة آلاف عقل طموح.',stat2Title:'المحتوى الذي لم يجرؤ أحد على تقديمه',stat2Desc:'أكثر من 500 وحدة معرفية.',stat3Title:'اعترافاتٌ تليق بكبار الطموح',stat3Desc:'أكثر من 50 امتيازاً.',stat4Title:'صرامة الإتقان',stat4Desc:'نخضعك لبيئة تعليمية ذكية.',exploreTitle:'استكشف عالمك التعليمي',exploreSubtitle:'اختر المجال الذي يناسب اهتماماتك',badge1:'جديد',badge2:'مميز',badge3:'ممتع',badge4:'تقييم',badge5:'شامل',badge6:'تواصل',card1Title:'الفيديوهات التعليمية',card1Desc:'مكتبة شاملة من الدروس المرئية',card2Title:'المقالات الحصرية',card2Desc:'محتوى تعليمي متخصص',card3Title:'ساحة الألعاب',card3Desc:'تعلم بطريقة ممتعة',card4Title:'مركز الاختبارات',card4Desc:'اختبارات تقييمية شاملة',card5Title:'مركز لغة الإشارة',card5Desc:'تعلم لغة الإشارة تفاعلياً',card6Title:'قسم الاستفسارات',card6Desc:'تواصل معنا وشارك أفكارك'},
-    en:{logoTagline:'Smart Education Platform',heroBadge:'✨ Welcome to the Future',heroTitle:'Your Learning Journey Starts Here',heroSubtitle:"Discover a world of knowledge with the region's leading smart education platform",ctaStart:'Get Started',ctaDiscover:'Explore More',stat1Title:'A Global Community',stat1Desc:'Preparing for ten thousand ambitious minds.',stat2Title:'Content No One Dared to Create',stat2Desc:'Over 500 knowledge units.',stat3Title:'Recognition for the Ambitious',stat3Desc:'Over 50 certified credentials.',stat4Title:'The Rigor of Mastery',stat4Desc:'A smart, challenging learning environment.',exploreTitle:'Explore Your Educational World',exploreSubtitle:'Choose the field that suits you',badge1:'New',badge2:'Featured',badge3:'Fun',badge4:'Assessment',badge5:'Inclusive',badge6:'Connect',card1Title:'Educational Videos',card1Desc:'High-quality visual lessons',card2Title:'Exclusive Articles',card2Desc:'Specialized educational content',card3Title:'Games Arena',card3Desc:'Learn through interactive games',card4Title:'Exams Center',card4Desc:'Comprehensive assessment tests',card5Title:'Sign Language Hub',card5Desc:'Learn sign language interactively',card6Title:'Q&A Section',card6Desc:'Connect with the SITEJ community'}
+    ar:{logoTagline:'منصة التعليم الذكية',heroBadge:'✨ مرحباً بك في منصتك التعليمية',heroTitle:'رحلتك التعليمية تبدأ هنا',heroSubtitle:'اكتشف عالماً من المعرفة والإبداع مع أفضل منصة تعليمية ذكية في المنطقة',ctaStart:'ابدأ الآن',ctaDiscover:'اكتشف المزيد',stat1Title:'مجتمعٌ عالمي نُعيد صياغته',stat1Desc:'نستعد لاستقبال عشرة آلاف عقل طموح.',stat2Title:'المحتوى الذي لم يجرؤ أحد على تقديمه',stat2Desc:'أكثر من 500 وحدة معرفية.',stat3Title:'اعترافاتٌ تليق بكبار الطموح',stat3Desc:'أكثر من 50 امتيازاً.',stat4Title:'صرامة الإتقان',stat4Desc:'نخضعك لبيئة تعليمية ذكية.',exploreTitle:'استكشف عالمك التعليمي',exploreSubtitle:'اختر المجال الذي يناسب اهتماماتك',badge1:'جديد',badge2:'مميز',badge3:'ممتع',badge4:'تقييم',badge5:'شامل',badge6:'تواصل',card1Title:'الفيديوهات التعليمية',card1Desc:'مكتبة شاملة من الدروس المرئية',card2Title:'المقالات الحصرية',card2Desc:'محتوى تعليمي متخصص',card3Title:'ساحة الألعاب',card3Desc:'تعلم بطريقة ممتعة',card4Title:'مركز الاختبارات',card4Desc:'اختبارات تقييمية شاملة',card5Title:'مركز لغة الإشارة',card5Desc:'تعلم لغة الإشارة تفاعلياً',card6Title:'قسم الاستفسارات',card6Desc:'تواصل معنا وشارك أفكارك'},
+    en:{logoTagline:'Smart Education Platform',heroBadge:'✨ Welcome to your Website',heroTitle:'Your Learning Journey Starts Here',heroSubtitle:"Discover a world of knowledge with the region's leading smart education platform",ctaStart:'Get Started',ctaDiscover:'Explore More',stat1Title:'A Global Community',stat1Desc:'Preparing for ten thousand ambitious minds.',stat2Title:'Content No One Dared to Create',stat2Desc:'Over 500 knowledge units.',stat3Title:'Recognition for the Ambitious',stat3Desc:'Over 50 certified credentials.',stat4Title:'The Rigor of Mastery',stat4Desc:'A smart, challenging learning environment.',exploreTitle:'Explore Your Educational World',exploreSubtitle:'Choose the field that suits you',badge1:'New',badge2:'Featured',badge3:'Fun',badge4:'Assessment',badge5:'Inclusive',badge6:'Connect',card1Title:'Educational Videos',card1Desc:'High-quality visual lessons',card2Title:'Exclusive Articles',card2Desc:'Specialized educational content',card3Title:'Games Arena',card3Desc:'Learn through interactive games',card4Title:'Exams Center',card4Desc:'Comprehensive assessment tests',card5Title:'Sign Language Hub',card5Desc:'Learn sign language interactively',card6Title:'Q&A Section',card6Desc:'Connect with the SITEJ community'}
 };
 var currentLang='ar';
 var langWrap=document.getElementById('langSelectorWrap');
@@ -571,7 +611,7 @@ function setLang(lang){
     document.querySelectorAll('[data-i18n]').forEach(function(el){var key=el.getAttribute('data-i18n');if(translations[lang]&&translations[lang][key]!==undefined)el.textContent=translations[lang][key];});
     var arrow=document.getElementById('ctaArrow1');
     if(arrow)arrow.className=lang==='ar'?'fas fa-arrow-left':'fas fa-arrow-right';
-    document.getElementById('langFlag').textContent=lang==='ar'?'🇸🇦':'🇬🇧';
+    document.getElementById('langFlag').textContent=lang==='ar'?'🇸🇦':'u🇸🇦';
     document.getElementById('langLabelText').textContent=lang==='ar'?'العربية':'English';
     document.querySelectorAll('.lang-option-item').forEach(function(el){el.classList.toggle('lang-active',el.getAttribute('data-lang')===lang);});
     langWrap.classList.remove('open');
