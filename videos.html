@@ -313,6 +313,7 @@
         <li><a href="masarat.html"><i class="fa-solid fa-left-right"></i><span>قسم المسارات</span></a></li>
         <li><a href="family.html"><i class="fas fa-users"></i><span>الرقابة الأبوية</span></a></li>
         <li><a href="support.html"><i class="fas fa-headset"></i><span>تعريف عن الراعي</span></a></li>
+		    <li><a href="settings.html"><i class="fas fa-gear"></i><span>الاعدادات</span></a></li>
 
         <li id="dashDivider" style="display:none;">
             <div class="dash-divider"></div>
@@ -325,47 +326,6 @@
             <a href="Principal-dashboard.html"><i class="fas fa-user-shield"></i><span>لوحة الإدارة</span></a>
         </li>
     </ul>
-
-    <div style="margin-top:12px;">
-        <div class="sn-settings-toggle" id="snSettingsToggle" onclick="snToggleSettings()">
-            <span style="display:flex;align-items:center;gap:10px;"><i class="fas fa-sliders-h"></i> الإعدادات</span>
-            <i class="fas fa-chevron-down sn-settings-chevron" id="snChevron"></i>
-        </div>
-        <div class="sn-settings-panel" id="snSettingsPanel">
-            <div class="sn-settings-inner">
-                <div class="sn-s-label"><i class="fas fa-circle-half-stroke"></i> المظهر</div>
-                <div class="sn-theme-row">
-                    <div class="sn-t-opt" id="sn-th-light" onclick="snPickTheme('light')">
-                        <div class="sn-t-preview sn-t-light"></div>
-                        <div class="sn-t-label">فاتح</div>
-                        <div class="sn-t-check"><i class="fas fa-check"></i></div>
-                    </div>
-                    <div class="sn-t-opt" id="sn-th-dark" onclick="snPickTheme('dark')">
-                        <div class="sn-t-preview sn-t-dark"></div>
-                        <div class="sn-t-label">داكن</div>
-                        <div class="sn-t-check"><i class="fas fa-check"></i></div>
-                    </div>
-                </div>
-                <div class="sn-s-label" style="margin-top:14px;"><i class="fas fa-wand-magic-sparkles"></i> الجرافيك</div>
-                <div class="sn-g-row">
-                    <div class="sn-g-opt" id="sn-gr-full" onclick="snPickGraphics('full')"><span class="sn-g-icon">✨</span><div class="sn-g-name">كامل</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
-                    <div class="sn-g-opt" id="sn-gr-reduced" onclick="snPickGraphics('reduced')"><span class="sn-g-icon">🌤</span><div class="sn-g-name">مخفف</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
-                    <div class="sn-g-opt" id="sn-gr-minimal" onclick="snPickGraphics('minimal')"><span class="sn-g-icon">⚡</span><div class="sn-g-name">بسيط</div><div class="sn-g-chk"><i class="fas fa-check"></i></div></div>
-                </div>
-                <div class="sn-s-label" style="margin-top:14px;"><i class="fas fa-text-height"></i> حجم الخط</div>
-                <div>
-                    <input type="range" class="sn-font-slider" id="snFontSlider" min="0" max="3" step="1" value="1" oninput="snFontInput(this.value)">
-                    <div class="sn-font-labels">
-                        <span onclick="snSetFont(0)" data-idx="0">S</span>
-                        <span onclick="snSetFont(1)" data-idx="1">M</span>
-                        <span onclick="snSetFont(2)" data-idx="2">L</span>
-                        <span onclick="snSetFont(3)" data-idx="3">XL</span>
-                    </div>
-                </div>
-                <button class="sn-save-btn" onclick="snSave()">💾 حفظ الإعدادات</button>
-            </div>
-        </div>
-    </div>
 
     <ul class="sn-links sn-logout" style="margin-top:16px;">
         <li><a href="#" onclick="snLogout()"><i class="fas fa-sign-out-alt"></i><span>تسجيل الخروج</span></a></li>
@@ -514,5 +474,6 @@
     document.addEventListener('click',function(e){ if(!langWrap.contains(e.target)) langWrap.classList.remove('open'); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ snClose(); } });
 </script>
+<script src="settings-apply.js"></script>
 </body>
 </html>

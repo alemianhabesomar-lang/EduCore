@@ -221,8 +221,21 @@
         <div onclick="snClose()" style="cursor:pointer;font-size:1.5rem;">✕</div>
     </div>
     <ul style="list-style:none;">
-        <li style="margin-bottom:15px;"><a href="index.html" style="text-decoration:none;color:#1a2942;font-weight:600;"><i class="fas fa-home"></i> الرئيسية</a></li>
-        <li><a href="#" onclick="handleLogout()" style="text-decoration:none;color:#ee5a6f;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+  <li><a href="index.html"><i class="fas fa-home"></i><span>الصفحة الرئيسية</span></a></li>
+        <li><a href="videos.html"><i class="fas fa-play-circle"></i><span>الفيديوهات</span></a></li>
+        <li><a href="articals.html"><i class="fas fa-feather-alt"></i><span>المقالات</span></a></li>
+        <li><a href="chat.html"><i class="fas fa-robot"></i><span>المساعد الذكي</span></a></li>
+        <li><a href="lab.html"><i class="fas fa-comment-dots"></i><span>مختبر العلوم</span></a></li>
+        <li><a href="games.html"><i class="fas fa-chess"></i><span>الألعاب</span></a></li>
+        <li><a href="exams.html"><i class="fas fa-pen-fancy"></i><span>الاختبارات</span></a></li>
+        <li><a href="sign_language_hub.html"><i class="fas fa-hands"></i><span>لغة الإشارة</span></a></li>
+        <li><a href="quraan.html"><i class="fas fa-book-quran"></i><span>اسلاميات</span></a></li>
+        <li><a href="partys.html"><i class="fas fa-microphone-alt"></i><span>الغرف الصوتية</span></a></li>
+        <li><a href="questions.html"><i class="fas fa-comment-dots"></i><span>الاستفسارات</span></a></li>
+        <li><a href="masarat.html"><i class="fa-solid fa-left-right"></i><span>قسم المسارات</span></a></li>
+        <li><a href="family.html"><i class="fas fa-users"></i><span>الرقابة الأبوية</span></a></li>
+        <li><a href="support.html"><i class="fas fa-headset"></i><span>تعريف عن الراعي</span></a></li>
+		 <li><a href="settings.html"><i class="fas fa-gear"></i><span>الاعدادات</span></a></li>
     </ul>
 </div>
 
@@ -773,5 +786,6 @@ document.getElementById('staffPassword')?.addEventListener('keydown', e=>{if(e.k
 document.getElementById('studentPassword')?.addEventListener('keydown', e=>{if(e.key==='Enter')studentLogin();});
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 </script>
+<script src="settings-apply.js"></script>
 </body>
 </html>
